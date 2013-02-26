@@ -2,7 +2,7 @@ mbfuzzer
 ========
 
 <b>Mobile Application Fuzzer via SSL MITM</b>
-Development Platform : Ruby 2.0
+<br>Development Platform : Ruby 2.0
 
 MBFuzzer will be developed for MITM (Man in the Middle) Fuzzing. Mobile applications use HTTP, SOAP, XML and JSON based data streams for communicate the servers. Many mobile applications use SSL Connect method for server communication. This method should be converted to HTTPS GET/POST method for MITM attacks. MBFuzzer will provide HTTP/HTTPS Proxy functionality and Real-Time Fuzzing feature with HTTP Connect conversion support. 
 
