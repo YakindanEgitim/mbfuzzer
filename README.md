@@ -14,3 +14,5 @@ MBFuzzer will be developed for MITM (Man in the Middle) Fuzzing. Mobile applicat
 * Fake Service Installation via XML/JSON Templates
 * Supports Different Injection Payloads using Templates
 
+<b>Inspired Projects</b>
+* Android Proxy - https://code.google.com/p/androidproxy
