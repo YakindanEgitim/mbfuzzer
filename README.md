@@ -15,3 +15,9 @@ MBFuzzer will be developed for MITM (Man in the Middle) Fuzzing. Mobile applicat
 
 ## Inspired Projects
 * Android Proxy - https://code.google.com/p/androidproxy
+
+## Project Team Requirements
+* Good Understanding of SSL/TLS Technology
+* Ruby Development Skills
+* JSON & XML Knowledge 
+* Fuzzing Knowledge 
