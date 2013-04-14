@@ -31,11 +31,23 @@ require 'cert.rb'
       url = line[/^\w+\s+(\S+)/, 1]
       http = line[/HTTP\/(1\.\d)\s*$/, 1]
       uri = URI::parse(url)      
+      
+#TODO : CONNECT requests redirect  
+#      if type == "CONNECT"        
+#        puts type + uri.scheme
+#        s = TCPSocket.new(host, port)
+#        sslContext = OpenSSL::SSL::SSLContext.new(ssl_cert)
+#        remote = OpenSSL::SSL::SSLSocket.new(s,sslContext)
+#        remote.connect 
+#        
+#        remote.puts l
+#        remote.gets
+#        
+#        remote.close        
 
-#     if type.to_s = "CONNECT"
-#	puts type + uri.scheme
-#      end      
-      server = TCPSocket.new(uri.host, uri.port) 
+        server = TCPSocket.new(uri.host, uri.port) 
+      
+
       server.puts("#{type} #{uri.path}?#{uri.query} HTTP/#{http}\r\n")
       
       while ( l = connection.gets)          
@@ -61,8 +73,8 @@ require 'cert.rb'
             break
           end
        end 
-
        ensure    
-          close(connection, server)      
+          close(connection, server)   
+        
   end
 
