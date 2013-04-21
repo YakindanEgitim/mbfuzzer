@@ -1,8 +1,7 @@
 require 'socket'
 require 'thread'
 require 'uri'
-require 'cert.rb'
- 
+require './lib/cert.rb'
  #creates a TCP Server to catch requests
  def create(addr, port)
       server = TCPServer.new(addr, port)
@@ -23,60 +22,69 @@ require 'cert.rb'
   def request(connection)
       content=""
       type = nil
-      datacount = 0
       
-      #line = connection.sysread(63535)
-      line = connection.gets
+      content = connection.sysread(63535)
+      #line = connection.gets
+      head = content.split("\n")[0]
       #extracts http header information
-      type = line[/^GET|POST|CONNECT/]
-      url = line[/^\w+\s+(\S+)/, 1]
-      http = line[/HTTP\/(1\.\d)\s*$/, 1]
+      type = head[/^\w+/]
+      url = head[/^\w+\s+(\S+)/, 1]
+      http = head[/HTTP\/(1\.\d)\s*$/, 1]
+
+      puts "Type:"+type+" URL:"+url+" HTTP:"+http
 
       if type == "CONNECT"
-          server_host = line.split(" ")[1].split(":")[0]
-          server_port = line.split(":")[1].split(" ")[0]
+          server_host = head.split(" ")[1].split(":")[0]
+          server_port = head.split(":")[1].split(" ")[0]
           con_server = TCPSocket.new(server_host,server_port)
 
           if con_server
-            connection.puts("HTTP/#{http} 200 Connection Established\r\n\r\n")
+            puts("HTTP/#{http} 200 Connection Established\r\n\r\n")
+            connection.write("HTTP/#{http} 200 Connection Established\r\n\r\n")
+            begin
             while data = connection.sysread(63535)
-                con_server.puts data
-                remote_data = con_server.sysread(63535)
-                connection.puts remote_data            
+                puts "Client Data:\n"+data
+                con_server.write data
+                remote_data = con_server.sysread(63535)              
+                puts "Remote Data:\n"+remote_data
+                connection.write remote_data          
             end
+            rescue Exception => httpsException
+              puts "HTTPS Exception : #{httpsException}"
+              con_server.close
+              connection.close
+            end           
           else
             connection.puts("Error")                          
           end          
-      end
-      
-      if type == "GET" or type == "POST"
-          uri = URI::parse(url)
-          server = TCPSocket.new(uri.host, uri.port)
-          server.puts("#{type} #{uri.path}?#{uri.query} HTTP/#{http}\r\n")
-      
-      	  while ( l = connection.gets)
-            if l =~ /^Content-Length:/
-            	datacount=l.split(":")[1].to_i
-            end
-          
-            if l.strip.empty?
-                server.puts("Connection: close\r\n\r\n")
-                if datacount >= 0
-                    server.puts(connection.read(datacount))
-                end
-                break
-            else
-                server.puts(l)
-            end
-          end
-       
-          while
-              server.read(90000, content)
-              connection.puts(content)
-              if content.size < 90000
-                  break
-              end
-          end
+      else
+         uri = URI::parse(url)
+         server = TCPSocket.new(uri.host, uri.port)
+         if uri.query.nil?
+            nhead="#{type} #{uri.path} HTTP/#{http}"
+         else
+            nhead="#{type} #{uri.path}?#{uri.query} HTTP/#{http}"
+         end
+         content.gsub!(head,nhead)
+         puts "OLD Header :\n"+head
+         puts "NEW Header :\n"+nhead
+         puts "Last Content :\n"+content
+         server.write content
+   
+         begin
+           while  scontent = server.sysread(90000)
+             #puts "Server Content :"+ scontent          
+             connection.write scontent       
+           end
+         rescue Exception => httpException
+           puts "HTTP Exception : #{httpException}"
+           connection.close
+           server.close
+         end
        end
-       close(connection, server)        
+       ensure
+          connection.close
+          server.close   
+          con_server.close  
   end
+
