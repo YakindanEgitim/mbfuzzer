@@ -67,6 +67,12 @@ def ssl_io(io)
 	  	sslContext.cert = OpenSSL::X509::Certificate.new(File.open('./certs/server.crt'))
 	  	sslContext.key = OpenSSL::PKey::RSA.new(File.open('./certs/server.key'))
 	  	sslContext.ca_file = './certs/cacert.pem'
+
+		#this part will use on-the-fly valid ssl certificate generation
+		#ncert,nkey = Cert.new.ssl_cert(OpenSSL::X509::Certificate.new(serverssl.peer_cert))
+		#sslContext.cert = OpenSSL::X509::Certificate.new(ncert)
+		#sslContext.key = OpenSSL::PKey::RSA.new(nkey)
+
 	  	sslContext.verify_mode = OpenSSL::SSL::VERIFY_NONE
 		sslio = OpenSSL::SSL::SSLSocket.new(io, sslContext)
 		sslio.sync_close = true
@@ -110,7 +116,7 @@ def request(connection)
 			#creating ssl io
 			puts("Connection Established for HTTPS")
 			connection.write("HTTP/#{http} 200 Connection Established\r\n\r\n")
-			ssl_connection=ssl_io(connection)
+			ssl_connection=ssl_io(connection,serverssl)
 
 			#SSL Content, Response Test Sample
 			#ssl_connection.puts "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 30\n\n<html><body>Test</body></html> "
