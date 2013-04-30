@@ -165,7 +165,6 @@ def request(connection)
 				rescue Exception => sslConnectionException
 					#it's an ssl verification bug, it will be fixed
 					puts "SSL Connection Exception : #{sslConnectionException}"
-					
 				ensure 
 					ssl_close(servertcp,serverssl)
 					ssl_connection.close
