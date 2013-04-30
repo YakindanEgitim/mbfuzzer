@@ -26,6 +26,7 @@ end
 def ssl_open(host,port)
 	s = TCPSocket.new(host, port)
 	sslContext = OpenSSL::SSL::SSLContext.new
+  	sslContext.ca_path ='/etc/ssl/certs'
   	sslContext.verify_mode = OpenSSL::SSL::VERIFY_NONE
 	ssl = OpenSSL::SSL::SSLSocket.new(s,sslContext)
 	ssl.sync = true
@@ -44,7 +45,7 @@ end
 def recv_send_4_server(server,connection)
 	begin
 		Timeout::timeout(10) {
-		while  scontent = server.sysread(1)
+		while scontent = server.sysread(1)
 			connection.write scontent 
 			break if scontent.length < 1
 		end
@@ -60,20 +61,29 @@ def recv_send_4_server(server,connection)
 	end
 end
 
-#creating ssl io object
-def ssl_io(io)
+def cert_gen(serverssl)
 	begin
-	  	sslContext = OpenSSL::SSL::SSLContext.new
-	  	sslContext.cert = OpenSSL::X509::Certificate.new(File.open('./certs/server.crt'))
-	  	sslContext.key = OpenSSL::PKey::RSA.new(File.open('./certs/server.key'))
-	  	sslContext.ca_file = './certs/cacert.pem'
+	sslContext = OpenSSL::SSL::SSLContext.new
+  	sslContext.cert = OpenSSL::X509::Certificate.new(File.open('./certs/server.crt'))
+  	sslContext.key = OpenSSL::PKey::RSA.new(File.open('./certs/server.key'))
+  	sslContext.ca_file = './certs/cacert.pem'
+  	sslContext.ca_path ='/etc/ssl/certs'
 
-		#this part will use on-the-fly valid ssl certificate generation
-		#ncert,nkey = Cert.new.ssl_cert(OpenSSL::X509::Certificate.new(serverssl.peer_cert))
-		#sslContext.cert = OpenSSL::X509::Certificate.new(ncert)
-		#sslContext.key = OpenSSL::PKey::RSA.new(nkey)
+	#this part will use on-the-fly valid ssl certificate generation
+	#ncert,nkey = Cert.new.ssl_cert(OpenSSL::X509::Certificate.new(serverssl.peer_cert))
+	#sslContext.cert = OpenSSL::X509::Certificate.new(ncert)
+	#sslContext.key = OpenSSL::PKey::RSA.new(nkey)
 
-	  	sslContext.verify_mode = OpenSSL::SSL::VERIFY_NONE
+  	sslContext.verify_mode = OpenSSL::SSL::VERIFY_NONE
+	rescue Exception => sslException
+		puts "Certification Exception : #{sslException}"
+	end
+	return sslContext
+end
+
+#creating ssl io object
+def ssl_io(io,sslContext)
+	begin
 		sslio = OpenSSL::SSL::SSLSocket.new(io, sslContext)
 		sslio.sync_close = true
 		sslio.accept
@@ -91,6 +101,41 @@ def inflate(string)
     	zstream.close
     	buf
 end
+
+def read_http(sock)
+	content = ""
+	while sock
+
+		content << sock.sysread(90000)
+		#content.gsub!("Accept-Encoding: gzip, deflate","Accept-Encoding: sdhc")
+		#content.gsub!("Accept-Encoding: gzip","Accept-Encoding: sdhc")
+
+		#if content =~ /Content-Length:\s*(.*)$/i
+		#	content << sock.sysread($i)
+		#	break
+
+		if content =~ /Transfer-Encoding: chunked/
+			break if content.include?("\r\n0\r\n")
+		elsif content.include?("\r\n\r\n") or content.include?("\n\n") 
+			break
+		end
+	end
+
+	return content
+end
+
+def ssl_recv(sock)
+	puts "SSLSocket State Waiting #{sock}"
+	p = sock.pending 
+	puts "SSLSocket State : #{p}"
+	if p == 0
+		data = sock.sysread(1) 
+	else
+		data=sock.sysread(p)
+	end
+	return data
+end
+
 
 #gathers http requests and sends to server;
 #repeats same job vice versa
@@ -116,39 +161,24 @@ def request(connection)
 			#creating ssl io
 			puts("Connection Established for HTTPS")
 			connection.write("HTTP/#{http} 200 Connection Established\r\n\r\n")
-			ssl_connection=ssl_io(connection,serverssl)
+			ssl_context=cert_gen(serverssl)
+			ssl_connection=ssl_io(connection,ssl_context)
 
 			#SSL Content, Response Test Sample
 			#ssl_connection.puts "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 30\n\n<html><body>Test</body></html> "
 
 			while 
 				begin
-					#reading data from ssl connected client
+					content = read_http(ssl_connection)
+					serverssl.write content
 
-					#sysread is not reading complete data
-					#there must be a better way to read data
-					content=""
-					Timeout::timeout(2) {
-						while p=ssl_connection.read(1)
-							content << p
-							break if p.length < 1
-						end
-					}
-
-				rescue Timeout::Error 
-					puts "Client Request\n\n"+content.to_s
-				
-					serverssl.puts content
-					puts "Request Sent to Remote Server"
-				
-					while scontent = serverssl.sysread(1)
-						ssl_connection.write scontent 
-						break if scontent.length < 1
-					end
-
+					scontent = read_http(serverssl)
+					ssl_connection.write scontent
+					
 				rescue Exception => sslConnectionException
 					#it's an ssl verification bug, it will be fixed
 					puts "SSL Connection Exception : #{sslConnectionException}"
+					
 				ensure 
 					ssl_close(servertcp,serverssl)
 					ssl_connection.close
