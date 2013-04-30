@@ -124,19 +124,6 @@ def read_http(sock)
 	return content
 end
 
-def ssl_recv(sock)
-	puts "SSLSocket State Waiting #{sock}"
-	p = sock.pending 
-	puts "SSLSocket State : #{p}"
-	if p == 0
-		data = sock.sysread(1) 
-	else
-		data=sock.sysread(p)
-	end
-	return data
-end
-
-
 #gathers http requests and sends to server;
 #repeats same job vice versa
 def request(connection)
