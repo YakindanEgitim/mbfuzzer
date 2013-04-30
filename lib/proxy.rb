@@ -102,27 +102,6 @@ def inflate(string)
     	buf
 end
 
-def read_http(sock)
-	content = ""
-	while sock
-
-		content << sock.sysread(90000)
-		#content.gsub!("Accept-Encoding: gzip, deflate","Accept-Encoding: sdhc")
-		#content.gsub!("Accept-Encoding: gzip","Accept-Encoding: sdhc")
-
-		#if content =~ /Content-Length:\s*(.*)$/i
-		#	content << sock.sysread($i)
-		#	break
-
-		if content =~ /Transfer-Encoding: chunked/
-			break if content.include?("\r\n0\r\n")
-		elsif content.include?("\r\n\r\n") or content.include?("\n\n") 
-			break
-		end
-	end
-
-	return content
-end
 
 #gathers http requests and sends to server;
 #repeats same job vice versa
