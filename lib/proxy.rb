@@ -7,14 +7,30 @@ require 'uri'
 require './lib/cert.rb'
 
 
-#creates a TCP Server to catch requests
-def create(addr, port)
-	server = TCPServer.new(addr, port)
-	while
-		s = server.accept
-		Thread.new{ request(s) }
-	end
-end
+class MBProxy
+
+  #creates server to handle requests
+  def initialize(addr, port)
+    begin
+      @socket = TCPServer.new(addr, port)
+      @threads = []
+      while
+        s = @socket.accept
+        @threads << Thread.new{ request(s) }
+      end
+    rescue Interrupt
+      puts "Interrupt handled"
+    ensure
+      stop
+    end  
+  end
+  
+  def stop
+    @threads.each do |thread|
+      Thread.kill(thread)
+    end
+    @socket.close
+  end
 
 # closes open connections
 def close(conn, srv)
@@ -39,6 +55,28 @@ def ssl_close(s,ssl)
 	ssl.close
 	s.close
 end
+
+def read_http(sock)
+  	content = ""
+  	while sock
+
+    		content << sock.sysread(90000)
+    		#content.gsub!("Accept-Encoding: gzip, deflate","Accept-Encoding: sdhc")
+    		#content.gsub!("Accept-Encoding: gzip","Accept-Encoding: sdhc")
+
+    		#if content =~ /Content-Length:\s*(.*)$/i
+    		#  content << sock.sysread($i)
+    		#  break
+
+    		if content =~ /Transfer-Encoding: chunked/
+      			break if content.include?("\r\n0\r\n")
+    		elsif content.include?("\r\n\r\n") or content.include?("\n\n") 
+      			break
+    		end
+  	end
+
+  	return content
+end 
 
 
 #receiving data from server and redirecting to client
@@ -174,3 +212,4 @@ def request(connection)
 	end
 end
 
+end
