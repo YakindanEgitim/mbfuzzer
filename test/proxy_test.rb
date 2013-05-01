@@ -7,11 +7,11 @@ require './lib/proxy.rb'
 #  address = ARGV[0]
 #  port = ARGV[1]
 #else
-#  puts "Proxy Library Usage: proxy.rb [address][port]"
+#  puts "MBProxy Library Usage: proxy_test.rb [address][port]"
 #  exit 1
 #end
  
 address = "127.0.0.1"
 port = 8080
 
-create(address, port)
+MBProxy.new(address,port)
