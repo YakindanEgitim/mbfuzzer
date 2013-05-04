@@ -55,6 +55,7 @@ class Cert
     raise 'Certificate cannot be verified!!!' unless @cert.verify @key
     
     return @cert,@key
+
   end
   
 end
