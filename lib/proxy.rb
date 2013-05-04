@@ -15,8 +15,7 @@ class MBProxy
       			@socket = TCPServer.new(addr, port)
 
 			@cert_store = OpenSSL::X509::Store.new()
-            		#@cert_store.add_path('/etc/ssl/certs')
-            		@cert_store.add_path('./certs')			
+            		@cert_store.set_default_paths		
 
       			@threads = []
       			while
