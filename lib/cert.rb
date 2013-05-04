@@ -11,11 +11,6 @@ class Cert
   end
   
   def ssl_cert(real_cert)    
-    
-    #this part adds passphrase and cipher, but it could not yet include  
-    cipher = OpenSSL::Cipher::Cipher.new("AES-128-CBC")
-    pass_phrase = "mbfuzzer"
-    key_secure = @key.export(cipher, pass_phrase)
    
     #creates a new certificate with incoming valid certificate info and with RSA key.      
     @cert.version = real_cert.version
@@ -57,6 +52,15 @@ class Cert
     return @cert,@key
 
   end
+
+	def chiper_key
+		#this part adds passphrase and cipher 
+    		cipher = OpenSSL::Cipher::Cipher.new("AES-128-CBC")
+    		pass_phrase = "mbfuzzer"
+    		key_secure = @key.export(cipher, pass_phrase)
+		
+		return key_secure	
+	end
   
 end
 
