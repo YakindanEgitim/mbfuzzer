@@ -4,12 +4,44 @@ class MBContent
 
 	def initialize()
 		@head = ""
-		@content = []
-		@xml_content = []
+		@head_content = []
+		@body_content = []
+		@xml_parser = XMLParser.new()
 	end
   
         #gets content and decide which type of content
         def analyse_content(content)
+		
+		#puts "Incoming content : "
+		#puts content
+
+		if content =~ /Content-Type: text\/xml/
+			puts "XML content"
+			extract_head_content(content)
+			
+			# get xml body from content 
+			x_content = content.split("\n\n")[1]
+			@body_content = @xml_parser.parse(x_content)
+		
+		elsif content =~ /Content-Type: application\/json/
+			#json parsing part will be added
+			#puts "JSON Content"
+			#extract_head_content(content)
+			return content
+		else
+			return content
+		end
+
+		#content is in an array
+		puts @head
+		puts @head_content
+		puts @body_content
+
+		return create_new_content()
+	end
+
+		
+	def extract_head_content(content)
 		#getting head of content
 		@head = content.split("\n")[0]
 
@@ -18,31 +50,20 @@ class MBContent
 			if content_line =~ /:/
 				key = content_line.split(":")[0]
 				value = content_line.split(":")[1].split("\r\n")[0]
-				@content << { key => value}
+				@head_content << { key => value}
 			end
 		end
-
-		# content is in an array
-		#puts @content
-		
-		# get xml part from http response 
-		x_content = content.split("\n\n")[1]
-		@xml_content = XMLParser.new.parse(x_content)
-		
-		#puts @xml_content
-		#puts create_new_content()
-
-		return create_new_content()
 	end
+
 
 	# generate request/response content
 	def create_new_content()
-		#gets xml
-		gen_xml = XMLParser.new().convert_from_hash(@xml_content)
+		#gets only xml for now
+		gen_xml = @xml_parser.convert_from_hash(@body_content)
 
 		gen_cont = @head
 		
-		@content.each() do |cont|
+		@head_content.each() do |cont|
 			cont.each do |key,value|
 				if key == "Content-Length"
                 			value = gen_xml.size	#calculate new content length
@@ -51,7 +72,7 @@ class MBContent
 			end
 		end
 
-		gen_cont = "#{gen_cont}\n\n#{gen_xml}"
+		gen_cont = "#{gen_cont}\n\n#{gen_xml}"		
 		#puts gen_cont
 
 		return gen_cont
