@@ -13,6 +13,13 @@ class MBProxy
   	def initialize(addr, port)
     		begin
       			@socket = TCPServer.new(addr, port)
+<<<<<<< HEAD
+=======
+
+			@cert_store = OpenSSL::X509::Store.new()
+            		@cert_store.set_default_paths		
+
+>>>>>>> test
       			@threads = []
       			while
         			s = @socket.accept
@@ -81,10 +88,19 @@ class MBProxy
 
 	#receiving data from server and redirecting to client
 	def recv_send_4_server(server,client)
+<<<<<<< HEAD
   		begin
     			Timeout::timeout(10) {
     				while scontent = server.sysread(1)
       					client.write scontent 
+=======
+		tmp = ""
+  		begin
+    			Timeout::timeout(10) {
+    				while scontent = server.sysread(1)
+					temp = "#{temp}#{scontent}"
+      					#client.write scontent 
+>>>>>>> test
       					break if scontent.length < 1
     				end
     			}
@@ -94,6 +110,13 @@ class MBProxy
   		rescue Exception => httpException
     			puts "HTTP Exception : #{httpException}"
   		ensure
+<<<<<<< HEAD
+=======
+			# decide which type of with content analyzer
+			client.write MBContent.new.analyse_content(temp)
+
+			#client.write temp
+>>>>>>> test
     			client.close
     			server.close   
   		end

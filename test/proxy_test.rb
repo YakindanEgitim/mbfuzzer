@@ -14,4 +14,4 @@ require './lib/proxy.rb'
 address = "127.0.0.1"
 port = 8080
 
-MBProxy.new(address,port)
+proxy = MBProxy.new(address,port)
