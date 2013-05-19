@@ -85,10 +85,12 @@ class MBProxy
 
 	#receiving data from server and redirecting to client
 	def recv_send_4_server(server,client)
+		tmp = ""
   		begin
     			Timeout::timeout(10) {
     				while scontent = server.sysread(1)
-      					client.write scontent 
+					temp = "#{temp}#{scontent}"
+      					#client.write scontent 
       					break if scontent.length < 1
     				end
     			}
@@ -98,6 +100,10 @@ class MBProxy
   		rescue Exception => httpException
     			puts "HTTP Exception : #{httpException}"
   		ensure
+			# decide which type of with content analyzer
+			client.write MBContent.new.analyse_content(temp)
+
+			#client.write temp
     			client.close
     			server.close   
   		end

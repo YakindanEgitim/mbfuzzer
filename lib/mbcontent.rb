@@ -110,14 +110,16 @@ class MBContent
 				gen_cont = "#{gen_cont}#{key}: #{value}\r\n"
 			end
 		end
-
+		
 		new_length = "Content-Length: #{@schema.length + gen_body.length}"
 		puts "#{old_length} --- #{new_length}"
 		gen_cont.gsub!(old_length,new_length)  
-    
+    		
+		# combine all parts
 		gen_cont = "#{@head}\r\n#{gen_cont}\r\n#{@schema}#{gen_body}"    
-     
-		puts gen_cont
+     		
+		# show new content
+		#puts gen_cont
 
 		return gen_cont
 	end
