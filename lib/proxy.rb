@@ -5,6 +5,7 @@ require 'thread'
 require 'timeout'
 require 'uri'
 require './lib/cert.rb'
+require './lib/mbcontent.rb'
 
 
 class MBProxy
@@ -89,8 +90,8 @@ class MBProxy
   		begin
     			Timeout::timeout(10) {
     				while scontent = server.sysread(1)
-					temp = "#{temp}#{scontent}"
-      					#client.write scontent 
+					#temp = "#{temp}#{scontent}"
+      					client.write scontent 
       					break if scontent.length < 1
     				end
     			}
@@ -101,7 +102,7 @@ class MBProxy
     			puts "HTTP Exception : #{httpException}"
   		ensure
 			# decide which type of with content analyzer
-			client.write MBContent.new.analyse_content(temp)
+			#client.write MBContent.new.analyse_content(temp)
 
 			#client.write temp
     			client.close
