@@ -8,7 +8,6 @@ class MBContent
 	def initialize(config_file)
 		@head = ""
 		@type = ""
-		@schema = ""
 		@head_content = []
 		@body_content = []
 		@xml_parser = XMLParser.new()
@@ -108,9 +107,6 @@ class MBContent
 				control = true
 			end
 			if control == true
-				if content_line =~ /xml\ version/
-					@schema = content_line
-				end
 				body = "#{body}#{content_line}"
 			end
 		end
@@ -142,12 +138,12 @@ class MBContent
 			end
 		end
 		
-		new_length = "Content-Length: #{@schema.length + gen_body.length}"
+		new_length = "Content-Length: #{gen_body.length}"
 		puts "#{old_length} --- #{new_length}"
 		gen_cont.gsub!(old_length,new_length)  
     		
 		# combine all parts
-		gen_cont = "#{@head}\r\n#{gen_cont}\r\n#{@schema}#{gen_body}"    
+		gen_cont = "#{@head}\r\n#{gen_cont}\r\n#{gen_body}"    
      		
 		# show new content
 		#puts gen_cont
