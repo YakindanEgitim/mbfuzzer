@@ -5,7 +5,7 @@ require 'xmlsimple'
 
 class MBContent
 
-	def initialize()
+	def initialize(config_file)
 		@head = ""
 		@type = ""
 		@schema = ""
@@ -14,7 +14,7 @@ class MBContent
 		@xml_parser = XMLParser.new()
 		@json_parser = JSONParser.new()
 		@actions = Hash.new()
-		load_actions(config_file)
+		self.load_actions(config_file)
 	end
 
 	#gets content and decide which type of content
