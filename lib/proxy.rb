@@ -19,7 +19,7 @@ class MBProxy
             		@cert_store.set_default_paths		
 
       			@threads = []
-			@mbcontent = MBContent.new(File.open('./config/mbconfig.cfg'))
+			@mbcontent = nil
 
       			while
         			s = @socket.accept
@@ -92,8 +92,8 @@ class MBProxy
   		begin
     			Timeout::timeout(10) {
     				while scontent = server.sysread(1)
-					#tmp_content = "#{tmp_content}#{scontent}"
-      					client.write scontent 
+					tmp_content = "#{tmp_content}#{scontent}"
+      					#client.write scontent 
       					break if scontent.length < 1
     				end
 				#client.write @mbcontent.analyse_content(tmp_content)
@@ -104,6 +104,12 @@ class MBProxy
   		rescue Exception => httpException
     			puts "HTTP Exception : #{httpException}"
   		ensure
+			@mbcontent = MBContent.new(File.open('./config/mbconfig.cfg'))
+  		    	if tmp_content =~ /Transfer-Encoding: chunked/
+            			client.write tmp_content
+  		    	else
+  		      		client.write @mbcontent.analyse_content(tmp_content)
+  		    	end
     			client.close
     			server.close   
   		end

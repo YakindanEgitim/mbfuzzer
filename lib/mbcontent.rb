@@ -47,7 +47,6 @@ class MBContent
 
 		#puts @head
 		#puts @head_content
-		#puts @schema
 		#puts @body_content
 		
 		return create_new_content()
