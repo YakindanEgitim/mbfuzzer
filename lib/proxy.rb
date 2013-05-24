@@ -19,6 +19,8 @@ class MBProxy
             		@cert_store.set_default_paths		
 
       			@threads = []
+			@mbcontent = MBContent.new(File.open('./config/mbconfig.cfg'))
+
       			while
         			s = @socket.accept
         			@threads << Thread.new{ request(s) }
@@ -86,14 +88,15 @@ class MBProxy
 
 	#receiving data from server and redirecting to client
 	def recv_send_4_server(server,client)
-		tmp = ""
+		tmp_content = ""
   		begin
     			Timeout::timeout(10) {
     				while scontent = server.sysread(1)
-					#temp = "#{temp}#{scontent}"
+					#tmp_content = "#{tmp_content}#{scontent}"
       					client.write scontent 
       					break if scontent.length < 1
     				end
+				#client.write @mbcontent.analyse_content(tmp_content)
     			}
   		rescue Exception::EFOError
   		rescue Timeout::Error
@@ -101,10 +104,6 @@ class MBProxy
   		rescue Exception => httpException
     			puts "HTTP Exception : #{httpException}"
   		ensure
-			# decide which type of with content analyzer
-			#client.write MBContent.new.analyse_content(temp)
-
-			#client.write temp
     			client.close
     			server.close   
   		end
