@@ -66,6 +66,21 @@ class MBContent
 		end
 	end
 
+	# raw_actions method looks the search and replace actions and 
+	# make necessary changes according to the actions.
+	def raw_actions(content)
+		return content if @actions['searchreplace'] == nil
+		
+		@actions['searchreplace'].each do |entry|
+			target = entry["target"]
+			newdata = entry["newdata"]
+
+			content.gsub!(target,newdata)
+		end
+	    
+	    return content
+	end
+
 
 	def extract_head_content(content)
 		#getting head of content
