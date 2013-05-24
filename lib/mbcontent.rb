@@ -1,5 +1,6 @@
 require './lib/xmlparser.rb'
 require './lib/jsonparser.rb'
+require 'xmlsimple'
 
 
 class MBContent
@@ -12,6 +13,8 @@ class MBContent
 		@body_content = []
 		@xml_parser = XMLParser.new()
 		@json_parser = JSONParser.new()
+		@actions = Hash.new()
+		load_actions(config_file)
 	end
 
 	#gets content and decide which type of content
@@ -48,6 +51,19 @@ class MBContent
 		puts @body_content
 		
 		return create_new_content()
+	end
+
+
+	# this method gets prepared action lists from incoming config file
+	def load_actions(config_file)
+		#puts "Actions are loaded!!!"
+		action = XmlSimple.new.xml_in(config_file, { 'ForceArray' => false })
+		
+		action.each do |a_name,a_attr|
+	    		if a_name == "searchreplace"
+				@actions['searchreplace'] = a_attr
+			end
+		end
 	end
 
 
