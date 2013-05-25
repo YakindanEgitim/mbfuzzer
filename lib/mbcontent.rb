@@ -61,12 +61,13 @@ class MBContent
 
 	# this method gets prepared action lists from incoming config file
 	def load_actions(config_file)
-		#puts "Actions are loaded!!!"
+    		#puts "Actions are loaded!!!"
 		action = XmlSimple.new.xml_in(config_file, { 'ForceArray' => false })
-		
+        
 		action.each do |a_name,a_attr|
-	    		if a_name == "searchreplace"
-				@actions['searchreplace'] = a_attr
+			case a_name
+				when "searchreplace" then @actions['searchreplace'] = a_attr
+				when "bigdata" then @actions['bigdata'] = a_attr
 			end
 		end
 	end
