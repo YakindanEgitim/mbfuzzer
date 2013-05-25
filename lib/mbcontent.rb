@@ -87,10 +87,23 @@ class MBContent
 	    return content
 	end
 
-	#
-	def xml_actions(content)
-		# TODO apply xml content actions 
-		# after preparing config file
+	# xml_actions gets bigdata config parameters and applies to 
+  	# incoming xml content if xml element name exist in the content 
+  	def xml_actions(content)
+    		# TODO recursive search implementation in order to look 
+    		# merge operation inside nested hashes
+    		return content if @actions['bigdata'] == nil
+          
+    		@actions['bigdata'].each do |entry|
+          		name = entry["name"]
+			data = entry["data"]
+			count = entry["count"]
+          
+			new = {name => [data*count.to_i]}
+          		
+			content = content.merge(new) if content.has_key?(name)
+		end
+    
 		return content
 	end
 	
