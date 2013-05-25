@@ -22,6 +22,12 @@ class MBContent
 		#puts "Incoming content : "
 		#puts content
 
+		@head_content.clear()
+		@body_content.clear()
+		@head.clear()
+		@raw.clear()
+		@type.clear()
+
 		if content =~ /Content-Type: text\/xml/
 			@type = "XML"
 			extract_head_content(content)
