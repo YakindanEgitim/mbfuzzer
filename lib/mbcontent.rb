@@ -85,7 +85,7 @@ class MBContent
        
         		@actions[a_name].each do |list|
 				if list.has_key?('url')
-					return true if list['url'].eql?(@url)
+					return true if @url =~ /#{list['url']}/
 				end         
 			end
 		end
@@ -99,7 +99,7 @@ class MBContent
 		return content if @actions['searchreplace'] == nil
 		
 		@actions['searchreplace'].each do |entry|
-			if entry['url'].eql? @url
+			if @url =~ /#{entry['url']}/
 				target = entry["target"]
 				newdata = entry["newdata"]
 
@@ -118,8 +118,8 @@ class MBContent
     		return content if @actions['bigdata'] == nil
           
     		@actions['bigdata'].each do |entry|
-			if entry['url'].eql? @url
-				#puts "exist action for #{url}"
+			if @url =~ /#{entry['url']}/
+				#puts "exist action for #{@url}"
 				name = entry["name"]
 				data = entry["data"]
 				count = entry["count"]
