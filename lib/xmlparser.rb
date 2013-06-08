@@ -26,9 +26,9 @@ class XMLParser
 
         # convert to xml from hash array
         def convert_from_hash(h_xml)
-
-		@xml = ""
-                xml = @xml_analyser.xml_out(h_xml, {'XmlDeclaration'=>true, 'RootName'=>@doc.root().name()})
+		#adds xml declaration
+		@xml = "#{@doc.xml_decl()}\r\n"
+                xml = @xml_analyser.xml_out(h_xml, {'RootName'=>@doc.root().name()})
 
                 #arrange xml content for creating appropriate content
                 xml.each_line do |xml_line|
