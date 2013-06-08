@@ -87,7 +87,7 @@ class MBProxy
 
 
 	#receiving data from server and redirecting to client
-	def recv_send_4_server(server,client)
+	def recv_send_4_server(server,client,url)
 		tmp_content = ""
   		begin
     			Timeout::timeout(10) {
@@ -109,7 +109,7 @@ class MBProxy
   		    	if tmp_content =~ /Transfer-Encoding: chunked/
             			client.write tmp_content
   		    	else
-  		      		client.write @mbcontent.analyse_content(tmp_content)
+  		      		client.write @mbcontent.analyse_content(tmp_content,url)
   		    	end
     			client.close
     			server.close   
@@ -225,7 +225,7 @@ class MBProxy
 
     			#writing request to server and redirecting response to client
     			prx_server.write content
-    			recv_send_4_server(prx_server,prx_client)
+    			recv_send_4_server(prx_server,prx_client,url)
   		end
 	end
 end

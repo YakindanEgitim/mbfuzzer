@@ -18,15 +18,20 @@ class MBContent
 	end
 
 	#gets content and decide which type of content
-	def analyse_content(content)
+	def analyse_content(content,url)
 		#puts "Incoming content : "
 		#puts content
+		#puts url
 
 		@head_content.clear()
 		@body_content.clear()
 		@head.clear()
 		@raw.clear()
 		@type.clear()
+		
+		@url = url
+		# check url inorder to apply action(s) if there exist
+		return content if check_target_url().eql? false
 
 		if content =~ /Content-Type: text\/xml/
 			@type = "XML"
@@ -42,11 +47,12 @@ class MBContent
 			extract_head_content(content)
 			@body_content = @json_parser.convert_to_hash( extract_body_content(content) )
 			
-		else	
-			return content if content.empty?
+		elsif content =~ /Content-Type: text\/html/	
 			@type = "RAW"
 			extract_head_content(content)
 			@raw = extract_body_content(raw_actions(content))
+		else
+			return content
 		end
 
 		#content is in an array
@@ -72,16 +78,33 @@ class MBContent
 		end
 	end
 
+
+	# checks the url if there exist any action
+	def check_target_url()
+		@actions.each do |a_name,a_attr|
+       
+        		@actions[a_name].each do |list|
+				if list.has_key?('url')
+					return true if list['url'].eql?(@url)
+				end         
+			end
+		end
+     
+		return false
+	end
+
 	# raw_actions method looks the search and replace actions and 
 	# make necessary changes according to the actions.
 	def raw_actions(content)
 		return content if @actions['searchreplace'] == nil
 		
 		@actions['searchreplace'].each do |entry|
-			target = entry["target"]
-			newdata = entry["newdata"]
+			if entry['url'].eql? @url
+				target = entry["target"]
+				newdata = entry["newdata"]
 
-			content.gsub!(target,newdata)
+				content.gsub!(target,newdata)
+			end
 		end
 	    
 	    return content
@@ -95,13 +118,16 @@ class MBContent
     		return content if @actions['bigdata'] == nil
           
     		@actions['bigdata'].each do |entry|
-          		name = entry["name"]
-			data = entry["data"]
-			count = entry["count"]
+			if entry['url'].eql? @url
+				#puts "exist action for #{url}"
+				name = entry["name"]
+				data = entry["data"]
+				count = entry["count"]
           
-			new = {name => [data*count.to_i]}
+				new = {name => [data*count.to_i]}
           		
-			content = content.merge(new) if content.has_key?(name)
+				content = content.merge(new) if content.has_key?(name)
+			end
 		end
     
 		return content
