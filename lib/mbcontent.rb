@@ -74,6 +74,7 @@ class MBContent
 			case a_name
 				when "searchreplace" then @actions['searchreplace'] = a_attr
 				when "bigdata" then @actions['bigdata'] = a_attr
+				when "bignum" then @actions['bignum'] = a_attr
 			end
 		end
 	end
@@ -135,7 +136,7 @@ class MBContent
 	
 	#
 	def json_actions(content)
-		# TODO apply json content actions 
+		# TODO apply json content actions
 		# after preparing config file
 		return content
 	end
