@@ -136,8 +136,31 @@ class MBContent
 	
 	#
 	def json_actions(content)
-		# TODO apply json content actions
-		# after preparing config file
+		return content if @actions['bigdata'] == nil
+              
+		@actions['bigdata'].each do |entry|
+			if @url =~ /#{entry['url']}/
+				#puts "exist action for #{@url}"
+				name = entry["name"]
+				data = entry["data"]
+				count = entry["count"]
+              
+				new = {name => data*count.to_i}
+                  
+				content = content.merge(new) if content.has_key?(name)
+			end
+        	end
+		#bignum action applying
+		#@actions['bignum'].each do |entry|
+			#if @url =~ /#{entry['url']}/
+				#tag = entry["tag"]
+				#number = entry["num"]
+				
+				#new = {tag => number}
+				#content = content.merge(new) if content.has_key?(tag)
+			#end
+		#end
+
 		return content
 	end
 
