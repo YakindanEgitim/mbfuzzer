@@ -45,7 +45,7 @@ class MBContent
 			@type = "JSON"
 
 			extract_head_content(content)
-			@body_content = @json_parser.convert_to_hash( extract_body_content(content) )
+			@body_content = json_actions( @json_parser.convert_to_hash( extract_body_content(content) ))
 			
 		elsif content =~ /Content-Type: text\/html/	
 			@type = "RAW"
