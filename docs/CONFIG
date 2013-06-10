@@ -1,0 +1,29 @@
+Fuzzing Templates
+========
+
+
+## Search & Replace
+
+Purpose of the search & replace structure is finding target element name and changing value of 
+the element according to url. The url field could be any key in the url instead of whole address.
+<pre><code>
+	<searchreplace>
+		<url> [target url address] </url>
+		<target> [element name ] </target>
+		<newdata> [replaced data] </newdata>
+	</searchreplace>
+</code></pre>
+
+## Big Data Entry
+
+Big Data Entry structure aims that applying big data like A*10000 inorder to give vulnerability 
+information using data and count tags by element name. Url feature is the same like search and 
+replace structure.
+<pre><code>
+	<bigdata>
+		<url> [target url address] </url>
+		<name> [element name] </name>
+		<data> [repeated data] </data>
+		<count> [number of repetitions] </count>
+	</bigdata>
+</code></pre>
