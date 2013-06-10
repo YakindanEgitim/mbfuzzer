@@ -77,6 +77,7 @@ class MBContent
 				when "bignum" then @actions['bignum'] = a_attr
 			end
 		end
+		#puts @actions
 	end
 
 
