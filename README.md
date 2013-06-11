@@ -31,6 +31,6 @@ MBFuzzer will be developed for MITM (Man in the Middle) Fuzzing. Mobile applicat
 ## Usage
 * MBFuzzer requires proxy address & port number in starting. 
 * By default, it is running on address 127.0.0.1 & port 8080. 
-* Running command under test file of MBFuzzer Project: 
+* Running command of MBFuzzer Project: 
 
        `ruby mbfuzzer.rb [address] [port]`
