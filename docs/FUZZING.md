@@ -18,20 +18,20 @@ Fuzzing yöntemlerinin uygulanması sağlamak için geliştirilen programlara is
 
 ## Tarihçe
 
-Fuzzing bazı yazılım mühendisleri tarafından yazılım testlerinde benzer yöntemler kullanılsada, 1989 yılında Prof. Barton Miller ve öğrencileri tarafından geliştirilmiştir.
+Fuzzing bazı yazılım mühendisleri tarafından yazılım testlerinde benzer yöntemler kullanılsa da, 1989 yılında Prof. Barton Miller ve öğrencileri tarafından geliştirilmiştir.
 
 ## Fuzzing Çalışma Yöntemi
 
 Bir fuzzing aracının çalışma prensibi sistemin beklediği geçerli bir cevabın bütünlüğü bozmadan beklenmedik veriler ile değiştirilmesi sonucu sistemin çökmesini sağlamaktır. Bu duruma uygun bir 
-senaryo olarak; mobil uygulamaya kullanıcı adı ve şifre ile geçerli bir giriş yapıldıktan sonra 
+senaryo olarak; mobil uygulamaya kullanıcı adı ve parola ile geçerli bir giriş yapıldıktan sonra 
 sunucudan dönen cevabın içerisinde kullanıcının gerçek ismi bulunduğu düşünülsün. Geçerli bir giriş 
-işlemi gerçekleştikten sonra kullanıcının gerçek adının yerine bir milyon karakterin mobil uygulamaya gönderilmesi ortaya bu veriyi tutan değişkenin saklayabileceği veri boyutu sorusunu ortaya çıkartır. 
+işlemi gerçekleştikten sonra kullanıcının gerçek adının yerine bir milyon karakterin mobil uygulamaya gönderilmesi, ortaya bu veriyi tutan değişkenin saklayabileceği veri boyutu sorusunu ortaya çıkartır. 
 Bu nedenle mobil uygulamanın çökmesi gerçekleşebilir.
 
 
-## Kullanıldığı Yöntemler
+## Kullanılan Yöntemler
 
-### Buffer Overflows Hataları
+### Bellek Taşması Hataları
 
 Sistemin programlama aşamasında geçerli veri kontrollerin yapılmasını kontrol etmeyi hedefleyen 
 hafızayı bozma saldırısıdır. Fuzzer aracı hafızada kaplayacağı yer olarak  büyük veriler gönderir:
@@ -50,7 +50,7 @@ hafızayı bozma saldırısıdır. Fuzzer aracı hafızada kaplayacağı yer ola
 
 > A * 1048577
 
-### Format String Hataları
+### Karakter Biçem Hataları
 
 Sistemin kullandığı sözdizimini hedef alan ve gelen verinin kontrol edilmemesi ile oluşan 
 hatalardır. Bir Fuzzer aracı aşağıdaki yapıları kullanarak sistemin çökmesine yol açabilir:
@@ -76,7 +76,7 @@ hatalardır. Bir Fuzzer aracı aşağıdaki yapıları kullanarak sistemin çök
 > %s%p%x%d%s%p%x%d%s%p%x%d
 
 
-### Integer Overflow Hataları
+### Sayısal İşlem Hataları
 
 Hafızada kullandığı alan dışına çıkmasına sebep olan saldırı türlerinden kaynaklanan bir 
 hata türüdür.Buffer Overflows iişleyiş mantığı ile benzerdir.
@@ -91,7 +91,7 @@ hata türüdür.Buffer Overflows iişleyiş mantığı ile benzerdir.
 
 > 0x80000000
 
-### SQL Injection
+### SQL Sorguları Değişimi
 
 Web uygulamalarının sahip oldukları veritabanlarından sorgu dilini kullanarak hata mesajlarını 
 elde etmek için kullanılır. Saldırgan yetkisi olmamasına rağmen elde edilen hata mesajları 
@@ -114,8 +114,10 @@ dolayı bilgilere erişim kolaylıkla sağlanabilir:
 > '; EXECUTE IMMEDIATE 'SEL' || 'ECT US' || 'ER'
 
 
-## Kaynaklar
-
+## Kaynak ve Referanslar
+* Fuzzing - https://www.owasp.org/index.php/Fuzzing‎
+* OWASP Fuzzing Code Database - https://www.owasp.org/index.php/Category:OWASP_Fuzzing_Code_Database
+* Fuzz Vectors - https://www.owasp.org/index.php/OWASP_Testing_Guide_Appendix_C:_Fuzz_Vectors
 * Ari Takanen, Jared DeMott, Charlie Miller : Fuzzing for Software - Security Testing 
 and Quality Assurance. ARTECH HOUSE
 * Wikipedia article - http://en.wikipedia.org/wiki/Fuzz_testing
