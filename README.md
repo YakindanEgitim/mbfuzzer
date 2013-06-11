@@ -7,10 +7,11 @@ MBFuzzer will be developed for MITM (Man in the Middle) Fuzzing. Mobile applicat
 
 ## Features
 * HTTP/HTTP Proxy Support
-* HTTPS Connect Conversion Support
-* On-The-Fly Valid SSL certificate generation for target server
+* HTTPS Connect Conversion Support (not fully functional)
+* On-The-Fly Valid SSL certificate generation for target server (Under
+* Development)
 * Real-Time Response/Request Fuzzing Support
-* Fake Service Installation via XML/JSON Templates
+* Fake Service Installation via XML/JSON Templates (Under Development)
 * Supports Different Injection Payloads using Templates
 
 ## Inspired Projects
@@ -23,14 +24,13 @@ MBFuzzer will be developed for MITM (Man in the Middle) Fuzzing. Mobile applicat
 * Fuzzing Knowledge 
 
 ## Installation
-
 * Please make sure that your system has necessary packages installed before installation.
 * For development platform Ruby in Ubuntu: sudo apt-get install ruby1.9.3
 * git clone git@github.com:YakindanEgitim/mbfuzzer.git
 
+## Usage
+* MBFuzzer requires proxy address & port number in starting. 
+* By default, it is running on address 127.0.0.1 & port 8080. 
+* Running command under test file of MBFuzzer Project: 
 
-##Usage
-
-* MBFuzzer requires proxy address & port number in starting. By default, it is running on address 127.0.0.1 & port 8080.
-  Under test file of MBFuzzer Project:
-	mbfuzzer.rb [address] [port]
+       `ruby mbfuzzer.rb [address] [port]`
