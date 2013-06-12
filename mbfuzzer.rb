@@ -1,4 +1,4 @@
-require 'lib/proxy.rb'
+require_relative 'lib/proxy.rb'
 
 if ARGV.empty?
   address = "127.0.0.1"
