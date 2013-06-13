@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Mbfuzzer by YakindanEgitim</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Mbfuzzer</h1>
+          <h2>Mobile Application Fuzzer via SSL MITM</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/YakindanEgitim/mbfuzzer/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/YakindanEgitim/mbfuzzer/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/YakindanEgitim/mbfuzzer" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="mobile-application-fuzzer-via-ssl-mitm-mbfuzzer" class="anchor" href="#mobile-application-fuzzer-via-ssl-mitm-mbfuzzer"><span class="octicon octicon-link"></span></a>Mobile Application Fuzzer via SSL MITM (mbfuzzer)</h1>
+
+<p>Development Platform : Ruby 2.0</p>
+
+<p>MBFuzzer will be developed for MITM (Man in the Middle) Fuzzing. Mobile applications use HTTP, SOAP, XML and JSON based data streams for communicate the servers. Many mobile applications use SSL Connect method for server communication. This method should be converted to HTTPS GET/POST method for MITM attacks. MBFuzzer will provide HTTP/HTTPS Proxy functionality and Real-Time Fuzzing feature with HTTP Connect conversion support. </p>
+
+<h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<ul>
+<li>HTTP/HTTP Proxy Support</li>
+<li>HTTPS Connect Conversion Support (not fully functional)</li>
+<li>On-The-Fly Valid SSL certificate generation for target server (Under</li>
+<li>Development)</li>
+<li>Real-Time Response/Request Fuzzing Support</li>
+<li>Fake Service Installation via XML/JSON Templates (Under Development)</li>
+<li>Supports Different Injection Payloads using Templates</li>
+</ul><h2>
+<a name="project-team-requirements" class="anchor" href="#project-team-requirements"><span class="octicon octicon-link"></span></a>Project Team Requirements</h2>
+
+<ul>
+<li>Good Understanding of SSL/TLS Technology</li>
+<li>Ruby Development Skills</li>
+<li>JSON &amp; XML Knowledge </li>
+<li>Fuzzing Knowledge </li>
+</ul><h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<ul>
+<li>Please make sure that your system has necessary packages installed before installation.</li>
+<li>For development platform Ruby in Ubuntu: sudo apt-get install ruby1.9.3</li>
+<li>git clone <a href="mailto:git@github.com">git@github.com</a>:YakindanEgitim/mbfuzzer.git</li>
+</ul><h2>
+<a name="fuzzing-templates" class="anchor" href="#fuzzing-templates"><span class="octicon octicon-link"></span></a>Fuzzing Templates</h2>
+
+<h3>
+<a name="search--replace" class="anchor" href="#search--replace"><span class="octicon octicon-link"></span></a>Search &amp; Replace</h3>
+
+<p>Purpose of the search &amp; replace structure is finding target element name and changing value of
+the element according to url. The url field could be any key in the url instead of whole address.</p>
+
+<pre><code>&lt;searchreplace&gt;
+    &lt;url&gt; [target url address] &lt;/url&gt;
+    &lt;target&gt; [element name ] &lt;/target&gt;
+    &lt;newdata&gt; [replaced data] &lt;/newdata&gt;
+&lt;/searchreplace&gt;
+</code></pre>
+
+<h3>
+<a name="big-data-entry" class="anchor" href="#big-data-entry"><span class="octicon octicon-link"></span></a>Big Data Entry</h3>
+
+<p>Big Data Entry structure aims that applying big character set inorder to give vulnerability
+information with using data and count tags by element name. Url feature is the same like search and
+replace structure.</p>
+
+<pre><code>&lt;bigdata&gt;
+    &lt;url&gt; [target url address] &lt;/url&gt;
+    &lt;name&gt; [element name] &lt;/name&gt;
+    &lt;data&gt; [repeated data] &lt;/data&gt;
+    &lt;count&gt; [number of repetitions] &lt;/count&gt;
+&lt;/bigdata&gt;
+</code></pre>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<ul>
+<li>Before starting MBFuzzer, mbconfig.cfg file, which is in config directory, should be updated with 
+using fuzzing templates under MBFuzzer tag.</li>
+<li>MBFuzzer requires proxy address &amp; port number in starting. </li>
+<li>By default, it is running on address 127.0.0.1 &amp; port 8080. </li>
+<li>
+<p>Running command of MBFuzzer Project: </p>
+
+<p><code>ruby mbfuzzer.rb [address] [port]</code></p>
+</li>
+</ul>
+        </section>
+
+        <footer>
+          Mbfuzzer is maintained by <a href="https://github.com/YakindanEgitim">YakindanEgitim</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
