@@ -25,8 +25,8 @@ MBFuzzer will be developed for MITM (Man in the Middle) Fuzzing. Mobile applicat
 
 ## Installation
 * Please make sure that your system has necessary packages installed before installation.
-* For development platform Ruby in Ubuntu: 'sudo apt-get install ruby1.9.3'
-* Also XmlSimple library is necessary: 'gem install xml-simple'
+* For development platform Ruby in Ubuntu: `sudo apt-get install ruby1.9.3`
+* Also XmlSimple library is necessary: `gem install xml-simple`
 * git clone git@github.com:YakindanEgitim/mbfuzzer.git
 
 ## Fuzzing Templates
